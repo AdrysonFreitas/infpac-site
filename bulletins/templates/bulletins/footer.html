@@ -1,0 +1,31 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-sm navbar-light footer-nav mt-5">
+    <div class="footer">
+        <div class="main-footer mt-5 mb-4">
+            <div class="footer-wrapper">
+                <img src="{% static 'dist/img/full_logo.png' %}" />
+                <div class="footer-description">
+                    O projeto “Informação Para A Ação: Comunicação Em Saúde Como Estratégia De Enfrentamento À Agravos De Notificação Compulsória No Município De Parnaíba-PI” trata-se de uma iniciativa da professora Drª. Thatiana Araújo Maranhão, em conjunto com o corpo estudantil da Universidade Estadual do Piauí, campus Alexandre Alves de Oliveira, os profissionais da Secretaria Municipal de Saúde, da Vigilância Epidemiológica e das Unidades Básicas de Saúde de Parnaíba-PI.  
+                </div>
+            </div>
+            <div class="footer-description footer-credits">
+                {% include 'bulletins/newsletter.html' %}
+                <div>
+                    <span class="footer-question">Contato: </span><span class="footer-answer ms-1"><a href="mailto:infpacuespi@gmail.com">infpacuespi@gmail.com</a></span><br>
+                    <span class="footer-question">Desenvolvido por: </span><span class="footer-answer ms-1"><a href="https://www.linkedin.com/in/adryson/">Adryson Freitas</a></span><br>
+                    <span class="footer-question">Design por: </span><span class="footer-answer ms-1"><a href="https://www.behance.net/adryson">Adryson Freitas</a></span><br>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="footer-bar">
+            <span class="">Infpac</span>
+            <div class="icons-div">
+                <a href="https://www.instagram.com/infpacuespi/">
+                    <i class="bi bi-instagram" style="font-size: 25px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

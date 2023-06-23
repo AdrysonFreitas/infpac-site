@@ -1,0 +1,119 @@
+{% extends 'bulletins/base.html' %}
+{% load social_share %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="Infpac - Informação Para A Ação">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Comunicação em saúde como estratégia de enfrentamento à agravos de notificação compulsória no município de Parnaíba-PI">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Infpac - Informação Para A Ação" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<script src="{% static 'dist/js/getcolor.js' %}"></script> 
+
+<div class="top">
+    <div class="top_img img-fluid" style="background-image:url({{ latest.image.url }})">
+        
+    </div>
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+    {% if latest.id %}
+    <div class="headline index">
+        <div class="headline-text">
+            <a href="{% url 'bulletin_detail' category=latest.category.slug pk=latest.id slug=latest.slug %}">CONFERIR</a>
+            <h1 class="headline-title mb-3 mt-3">
+                {{ latest.name }}
+            </h1>
+            <span class="badge badge-primary">BOLETIM MAIS RECENTE</span></h3>
+        </div>
+        <img id="i" src="{{ latest.image.url }}" alt="{{latest.category.name}} - {{latest.name}}">
+    </div>
+    {% endif %}
+</div>
+
+<div class="list-block">
+
+    <div class="search-field my-4">
+        <span class="headingp mx-4">Últimas Publicações:</span>
+        <div class="input-group">
+            <form class="form-search" method='GET'>
+                <div class="form-outline">
+                    <input type="search" id="form1" class="form-control" name='q' placeholder="Buscar" value='{{ request.GET.q }}'/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-search" >
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if latest_bulletin_list %}
+        <div class="card-group">
+            <div class="row bulletin_list">
+                    {% for bulletin in latest_bulletin_list %}
+                        <div class="card col-md-4">
+                            <article class="postcard detail_s_color .small">
+                                <a class="postcard__img_link" href="{% url 'bulletin_detail' category=bulletin.category.slug pk=bulletin.id slug=bulletin.slug %}">
+                                    <img class="postcard__img" src="{{ bulletin.image.url }}" alt="{{ bulletin.category }} - {{ bulletin.name}}" />
+                                </a>
+                                <div class="postcard__text">
+                                    <table class="content-table">
+                                        <tr>
+                                            <td>
+                                                <h1 class="postcard__title detail_s_color">
+                                                    <a class="in_detail dotted-link" href="{% url 'bulletin_detail' category=bulletin.category.slug pk=bulletin.id slug=bulletin.slug %}">{{ bulletin.name }}</a>
+                                                </h1>
+                                                <div class="postcard__subtitle small">
+                                                    <h6 class="card-subtitle mb-2 lead"></h6>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h1 class="rate"></h1>
+                                            </td>
+                                        </tr>
+                                        <tr class="tagbox_parent mt-5">
+                                            <td>
+                                                <ul class="postcard__tagbox">
+                                                    <li class="tag__item play detail_s_color clickable" onclick="location.href='{% url 'category_detail' bulletin.category.slug %}';">{{ bulletin.category }}</a></li>
+                                                    <li class="tag__item play detail_s_color">{% if bulletin.views %}{{ bulletin.views }}{% else %}0{% endif %} acessos</li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <div class="share_icon clickable">
+                                                    <a tabindex="0" class="btn" role="button" data-toggle="popover"><i class="bi bi-share" style="font-size: 14px;"></i></a>
+                                                    <div class="share_popover">
+                                                        <div class="share">
+                                                            {% post_to_facebook bulletin '<i class="bi bi-facebook" style="font-size: 17px;"></i>' %}
+                                                            {% post_to_twitter "Fique por dentro! {{bulletin.name}}. Confira em:" bulletin '<i class="bi bi-twitter" style="font-size: 17px;"></i>' %}
+                                                            {% post_to_telegram "Fique por dentro! {{bulletin.name}}." bulletin '<i class="bi bi-telegram" style="font-size: 17px;"></i>' %}
+                                                            {% post_to_whatsapp bulletin '<i class="bi bi-whatsapp" style="font-size: 17px;"></i>' %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="share_icon clickable  ms-1">
+                                                    <a tabindex="0" class="btn" role="button" id="bulletin{{ bulletin.id }}">{% copy_to_clipboard bulletin '<i class="bi bi-link-45deg" style="font-size: 17px;"></i>' link_class="buttonCopy" %}</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    {% else %}
+        <p class="search-none">Nenhuma publicação encontrada</p>
+    {% endif %}
+</div>
+
+{% include 'bulletins/pagination.html' %}
+{% endblock %}

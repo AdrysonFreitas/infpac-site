@@ -1,0 +1,48 @@
+{% extends 'bulletins/base.html' %}
+{% block title %} Colaboradores - Infpac {% endblock %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="Colaboradores - Infpac">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Comunicação em saúde como estratégia de enfrentamento à agravos de notificação compulsória no município de Parnaíba-PI">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Colaboradores - Infpac" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="category-index top">
+    <div class="top_category top_img img-fluid"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="headline index">
+        <div class="bulletin-info headline-text">
+            <!--<div class="badge-div">
+                <span class="badge badge-primary {% if category.avg < 50 and category.avg >= 0 %} bad {% elif category.avg > 69 and category.avg < 101 %} good {% elif category.avg > 49 and category.avg < 70 %} mixed {% else%} neutre {% endif %}">{% if bulletin.tracks > 8 %} LP {% else %} EP {% endif %}</span></h3>
+            </div>-->
+            <span class="right-side-contents-number">.</span>
+            <h1 class="headline-title mb-0">Colaboradores</h1>
+        </div>
+    </div>
+</div>
+
+<div class="list-block partners">
+    <div class="member-list">
+        <div class="card-group">
+            <div class="row">
+                {% for partner in latest_partner_list %}
+                    <div class="list-wrapper">
+                        <div class="list-img"><img src="{{ partner.image.url }}"/></div>
+                        <div class="list-name">{{ partner.name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

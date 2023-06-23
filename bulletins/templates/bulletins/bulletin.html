@@ -1,0 +1,116 @@
+{% extends 'bulletins/base.html' %}
+{% load social_share %}
+{% block title %} {{ bulletin.name }} - Infpac {% endblock %}
+
+{% block head %}
+<meta property="og:title" content="{{ bulletin.name }} - Infpac">
+<meta property="og:image" content="{{ bulletin.image.url }}">
+<meta property="og:description" content="{{ bulletin.category.name }} do Infpac">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="{{ bulletin.name }} - Infpac" />
+<meta name="twitter:image" content="{{ bulletin.image.url }}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="bulletin-info top">
+    <div class="top_img img-fluid" style="background-image:url({{ bulletin.image.url }})"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="bg-top"></div>
+
+    <div class="headline">
+        <div class="bulletin-info headline-text">
+            <div class="badge-div">
+                <span class="badge badge-primary clickable" onclick="location.href='{% url 'category_detail' bulletin.category.slug %}';">{{ bulletin.category.name }}</span></h3>
+            </div>
+            <h1 class="headline-title mb-3 mt-3">
+                {{ bulletin.name }}
+            </h1>
+        </div>
+        <div class="headline-img">
+            <img id="i" src="{{ bulletin.image.url }}" alt="{{bulletin.category.name}} - {{bulletin.name}}">
+        </div>
+    </div>
+</div>
+
+<div class="detail-page list-block pt-2 mb-5 pb-5">
+    <div class="main-footer details-part">
+        <div class="left-side-contents-side me-5">
+            <div class="description">
+                <div class="search-field my-4">
+                    <h4><span class="headingp mx-4">DESCRIÇÃO:</span></h4>
+                </div>
+
+                <div class="left-side-contents-display">
+                    {{ bulletin.description }}
+                </div>
+            </div>
+            <div class="description_bottom mt-3">
+                <div class="date_published"><span><b class="me-2">Publicado em: </b> {{ bulletin.created_at }}</span></div>
+                <div class="share">
+                    <span class="date_published"><b class="me-2">Compartilhar: </b></span>
+                    {% post_to_facebook object_or_url '<i class="bi bi-facebook" style="font-size: 17px;"></i>' %}
+                    {% post_to_twitter "Fique por dentro! {{bulletin.name}}. Confira em:" object_or_url '<i class="bi bi-twitter" style="font-size: 17px;"></i>' %}
+                    {% post_to_telegram "Fique por dentro! {{bulletin.name}}." object_or_url '<i class="bi bi-telegram" style="font-size: 17px;"></i>' %}
+                    {% post_to_whatsapp object_or_url '<i class="bi bi-whatsapp" style="font-size: 17px;"></i>' %}
+                    <div class="vr"></div>
+                    {% copy_to_clipboard object_or_url '<i class="bi bi-link-45deg me-1" style="font-size: 17px;"></i> Copiar link' %}
+                </div>
+            </div>
+        </div>
+        <div class="vr"></div>
+        <hr>
+        <div class="right-side-contents-side bulletin-page">
+            <div class="search-field mt-4 mb-2">
+                <h4><span class="headingp mx-4">ACESSE:</span></h4>
+            </div>
+            <div class="right-side-contents-display">
+                <div class="right-side-content bulletin-url mb-3">
+                    <i class="bi bi-link-45deg" style="font-size: 1.3rem;"></i>
+                    <a href="{{ bulletin.bulletin_url }}" onclick="add_one_click({{bulletin.id}})"> Clique aqui</a>
+                </div>
+                <div class="right-side-content">
+                    <div class="right-side-content-info">
+                        <span class="right-side-content-name">Acessos:</span>
+                    </div>
+                    <div class="right-side-content-rating ms-2">{{ bulletin.views }}</div>
+                </div>
+            </div>
+            <div class="tags-div">
+                <div class="search-field mt-4 mb-2">
+                    <h4><span class="headingp mx-4">Marcadores:</span></h4>
+                </div>
+                <div class="right-side-contents-display">
+                    <div class="right-side-content">
+                        {% for tag in bulletin.tag_list %}
+                            <span class="badge badge-primary inactive">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="disqus_thread"></div> 
+<script> 
+    /** 
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS. 
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */ 
+    /* 
+    var disqus_config = function () { 
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable 
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable 
+    }; 
+    */ 
+    (function() { // DON'T EDIT BELOW THIS LINE 
+    var d = document, s = d.createElement('script'); 
+    s.src = 'https://infpac.disqus.com/embed.js'; 
+    s.setAttribute('data-timestamp', +new Date()); 
+    (d.head || d.body).appendChild(s); 
+    })(); 
+</script> 
+{% endblock %}

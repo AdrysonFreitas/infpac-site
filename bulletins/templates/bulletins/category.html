@@ -1,0 +1,90 @@
+{% extends 'bulletins/base.html' %}
+{% block title %} {{ category.name }} - Infpac {% endblock %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="{{ category.name }} - Infpac">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Veja as principais publicações dessa categoria no Infpac">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="{{ category.name }} - Infpac" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="bulletin-info top category-info">
+    <div class="top_img img-fluid" style="background-image:url({{ category.image.url }})"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="bg-top"></div>
+
+    <div class="headline">
+        <div class="bulletin-info headline-text">
+            <span class="right-side-contents-number">{{ category.count_bulletins }} {% if category.count_bulletins != 1 %} publicações {% else %} publicação {% endif %}</span>
+            <h1 class="headline-title mb-0">{{ category.name }} </h1>
+        </div>
+    </div>
+</div>
+
+<div class="detail-page list-block pt-2 mb-5 pb-5 category-info">
+    <div class="main-footer details-part">
+        <div class="left-side-contents-side me-5">
+            <div class="bulletins-published">
+                <div class="search-field my-4">
+                    <h4><span class="headingp mx-4">Documentos publicados:</span></h4>
+                </div>
+                <div class="left-side-contents-display">
+                    {% for bulletin in published_bulletins %}
+                        <div class="left-side-content-row">
+                            <div class="left-side-content-bulletins">
+                                <div class="left-side-content-icon">
+                                    <img src="{{ bulletin.image.url }}" class="left-side-content-img in_bulletin" />
+                                </div>
+                                <div class="left-side-content-album-info ps-3">
+                                    <span class="left-side-content-name">
+                                        <a class="dotted-link" href="{% url 'bulletin_detail' category=bulletin.category.slug pk=bulletin.id slug=bulletin.slug %}">
+                                            {{ bulletin.name }}
+                                        </a>
+                                    </span>
+                                    <span class="left-side-content-date">
+                                        {{ bulletin.created_at|date }} — {{ bulletin.views }} acessos
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if page_obj.has_next or page_obj.has_previous %}
+                <div class="pagination-div mt-4">
+                    {% include "bulletins/pagination.html" %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="vr"></div>
+        <hr>
+        <div class="right-side-contents-side">
+            <div class="best-tracks-div">
+                <h6 class="right-side-contents-desc lead">{{ category.description }}</h6>
+            
+                <div class="search-field mt-4 mb-2">
+                    <h4><span class="headingp mx-4">Mais acessados:</span></h4>
+                </div>
+                <div class="right-side-contents-display">
+                    {% for bulletin in most_viewed %}
+                        <div class="right-side-content">
+                            <div class="right-side-content-info mb-2">
+                                <span class="right-side-content-name"><a href="{% url 'bulletin_detail' category=bulletin.category.slug pk=bulletin.id slug=bulletin.slug %}">{{ bulletin.name }}</a></span>
+                            </div>
+                            <div class="right-side-content-rating ms-2">{% if bulletin.views < 0 %} - {% else %} {{ bulletin.views }} {% endif %}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

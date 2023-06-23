@@ -1,0 +1,46 @@
+{% load static %}
+<nav class="uespi-bar" style="z-index: 1;">
+  <a class="uespi-name" href="https://uespi.br"><img class="uespi-img" src="{% static 'dist/img/brasao_uespi.png' %}"/>UESPI</a>
+  <div class="icons-div">
+    <a href="https://www.instagram.com/infpacuespi/">
+      <i class="bi bi-instagram" style="font-size: 17px;"></i>
+    </a>
+  </div>
+</nav>
+{% if messages %}
+    <ul class="messages mb-0 ms-0 ps-0">
+        {% for message in messages %}
+        <li {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}><i class="bi bi-{% if message.tags == "success" %}check-circle-fill{% else %}exclamation-triangle-fill{% endif %} me-1" style="font-size: smaller;"></i> {{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<nav class="navbar navbar-expand-sm navbar-light" style="z-index: 1;">
+  <a class="navbar-brand mb-0 h1 ps-4 " href="{% url 'index' %}"><img src="{% static 'dist/img/logo.png' %}"/></a>
+  <button 
+    class="navbar-toggler me-4" 
+    type="button" 
+    data-toggle="collapse" 
+    data-target="#navbarNavAltMarkup" 
+    aria-controls="navbarNavAltMarkup" 
+    aria-expanded="false" 
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse navbar-light" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      {% url 'index' as inicio %}
+      {% url 'category_index' as categorias %}
+      {% url 'team' as equipe %}
+      {% url 'partners' as colaboradores %}
+      {% url 'actions' as acoes %}
+
+      <a href="{{ inicio }}" {% if request.path == inicio %}class="nav-item nav-link active"{% else %}class="nav-item nav-link"{% endif %}>Início</a>
+      <a href="{{ categorias }}" {% if request.path == categorias %}class="nav-item nav-link active"{% else %}class="nav-item nav-link"{% endif %}>Categorias</a>
+      <a href="{{ equipe }}" {% if request.path == equipe %}class="nav-item nav-link active"{% else %}class="nav-item nav-link"{% endif %}>Equipe do Projeto</a>
+      <a href="{{ colaboradores }}" {% if request.path == colaboradores %}class="nav-item nav-link active"{% else %}class="nav-item nav-link"{% endif %}>Colaboradores</a>
+      <a href="{{ acoes }}" {% if request.path == acoes %}class="nav-item nav-link active"{% else %}class="nav-item nav-link"{% endif %}>Infpac em Ação</a>
+    </div>
+  </div>
+</nav>
+

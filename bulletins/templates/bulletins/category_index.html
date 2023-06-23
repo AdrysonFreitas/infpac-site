@@ -1,0 +1,82 @@
+{% extends 'bulletins/base.html' %}
+{% load static %}
+{% block title %} Categorias - Infpac {% endblock %}
+
+{% block head %}
+<meta property="og:title" content="Categorias - Infpac">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Comunicação em saúde como estratégia de enfrentamento à agravos de notificação compulsória no município de Parnaíba-PI">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Categorias - Infpac" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="category-index top">
+    <div class="top_category top_img img-fluid"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="headline index">
+        <div class="bulletin-info headline-text">
+            <span class="right-side-contents-number">Na página de cada categoria é possível encontrar as publicações correspondentes</span>
+            <h1 class="headline-title mb-0">Categorias</h1>
+        </div>
+    </div>
+</div>
+
+<div class="list-block category-index">
+
+    <div class="search-field mt-4 mb-5">
+        <div class="input-group">
+            <form class="form-search" method='GET'>
+                <div class="form-outline">
+                    <input type="search" id="form1" class="form-control" name='q' placeholder="Buscar" value='{{ request.GET.q }}'/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-search" >
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if latest_category_list %}
+        <div class="card-group">
+            <div class="row">
+                    {% for category in latest_category_list %}
+                        <div class="card col-md-4">
+                            <article class="postcard neutre detail_s_color .small">
+                                <div class="postcard__text">
+                                    <table class="content-table">
+                                        <tr>
+                                            <td>
+                                                <h1 class="postcard__title detail_s_color">
+                                                    <a class="in_detail dotted-link" href="{% url 'category_detail' category.slug %}">{{ category.name }}</a>
+                                                </h1>
+                                                <div class="postcard__subtitle small">
+                                                    <h6 class="card-subtitle mb-2 lead">{{ category.genre_list }}</h6>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <ul class="postcard__tagbox mt-4">
+                                                    <li class="tag__item play detail_s_color">{{ category.count_bulletins }} {% if category.count_bulletins != 1 %} publicações {% else %} publicação {% endif %}</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    {% else %}
+        <p class="search-none ms-2">Nenhuma categoria encontrada</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="mb-2" style="display: block;">
+    <form enctype="multipart/form-data" method="POST" action="" style="text-align: center;">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="mb-2">Receba nossas atualizações:</label>
+            <input type="email" class="form-control" id="userEmail" placeholder="Digite seu e-mail" required>
+            <small class="erroremail"></small>
+            <input type="text" class="form-control mt-2" id="userName" placeholder="Digite seu nome" required>
+            <small class="errorname"></small>
+            <small class="success"></small>
+        </div>
+        <button type="submit" id="submit" class="btn my-3 form-newsletter" disabled='disabled'>Inscrever-se</button>
+    </form>
+</div>

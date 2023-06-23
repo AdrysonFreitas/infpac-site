@@ -1,0 +1,46 @@
+{% extends 'bulletins/base.html' %}
+{% block title %} Equipe do Projeto - Infpac {% endblock %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="Equipe do Projeto - Infpac">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Conheça a equipe do Infpac">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Equipe do Projeto - Infpac" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="category-index top">
+    <div class="top_category top_img img-fluid"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="headline index">
+        <div class="bulletin-info headline-text">
+            <span class="right-side-contents-number">Membros da equipe</span>
+            <h1 class="headline-title mb-0">Equipe do Projeto</h1>
+        </div>
+    </div>
+</div>
+
+<div class="list-block team">
+    <div class="member-list">
+        <div class="card-group">
+            <div class="row">
+                {% for member in latest_team_list %}
+                    <div class="list-wrapper">
+                        <div class="list-img"><img src="{{ member.image.url }}"/></div>
+                        <div class="list-name"><a class="team_link" href="{{ member.link }}">{{ member.name }}</a></div>
+                        <div class="list-description">{{ member.function }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

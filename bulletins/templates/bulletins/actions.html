@@ -1,0 +1,45 @@
+{% extends 'bulletins/base.html' %}
+{% block title %} Infpac em Ação - Infpac {% endblock %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="Infpac em Ação">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Comunicação em saúde como estratégia de enfrentamento à agravos de notificação compulsória no município de Parnaíba-PI">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Infpac em Ação" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="category-index top">
+    <div class="top_category top_img img-fluid"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="headline index">
+        <div class="bulletin-info headline-text">
+            <span class="right-side-contents-number">Atividades realizadas</span>
+            <h1 class="headline-title mb-0">Infpac em Ação</h1>
+        </div>
+    </div>
+</div>
+
+<div class="list-block team actions">
+    <div class="member-list">
+        <div class="card-group">
+            <div class="row">
+                {% for action in latest_action_list %}
+                    <div class="list-wrapper">
+                        <div class="list-img"><img src="{{ action.image.url }}"/></div>
+                        <div class="list-name">{{ action.name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

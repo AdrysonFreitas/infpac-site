@@ -1,0 +1,43 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <span class="first">
+                        <a class="btn btn-outline-primary btn-sm btn-pages" href="?page=1">&laquo;</a>
+                    </span>
+                    <span class="previous">
+                        <a class="btn btn-outline-primary btn-sm btn-pages" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    </span>
+                {% else %}
+                    <span class="first">
+                        <a class="btn btn-outline-primary btn-sm btn-pages disabled-btn" disabled>&laquo;</a>
+                    </span>
+                    <span class="previous">
+                        <a class="btn btn-outline-primary btn-sm btn-pages disabled-btn" disabled>Anterior</a>
+                    </span>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <span class="next">
+                        <a class="btn btn-outline-primary btn-sm btn-pages" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                    </span>
+                    <span class="first">
+                        <a class="btn btn-outline-primary btn-sm btn-pages" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                    </span>
+                {% else %}
+                    <span class="first">
+                        <a class="btn btn-outline-primary btn-sm btn-pages disabled-btn" disabled>Próxima</a>
+                    </span>
+                    <span class="previous">
+                        <a class="btn btn-outline-primary btn-sm btn-pages disabled-btn" disabled>&raquo;</a>
+                    </span>
+                {% endif %}
+            </span>
+        </div>
+    </ul>
+</nav>

@@ -1,0 +1,78 @@
+{% extends "admin/change_form.html" %}
+{% load admin_list %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Criar newsletter | {% trans 'Painel do Infpac' %}{% endblock %}
+{% block branding %}
+    <h1 id="infpac">{% trans 'Painel do Infpac' %}</h1>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .vTextField{
+        width: 68em;
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; <a href="{% url 'newsletterCreator' %}">Criar newsletter</a>
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content_title %}
+<h1>
+    Criar um novo e-mail para os inscritos:
+</h1>
+{% endblock %} 
+
+{% block content %}
+    <div id="content-main">
+        <form enctype="multipart/form-data" method="post" id="bulletin_form" novalidate=""><input type="hidden" name="csrfmiddlewaretoken" value="wOH9OhJd5b8CvDjhpW8NNjQhvlkw8UZYDCETARZGyMpKyTSszkVxXpeU6c1Zy0Ff">
+            <div>
+                <fieldset class="module aligned ">
+                    {% csrf_token %}
+                    <div class="form-row field-subject">
+                        <div>
+                            <label class="required" for="id_subject">{{ form.subject.label }}</label>
+                            {{ form.subject }}
+                        </div>
+                    </div>
+                    <div class="form-row field-receivers">
+                        <div>
+                            <label class="required" for="id_receivers">{{ form.receivers.label }}</label>
+                            {{ form.receivers }}
+                        </div>
+                    </div>
+                    <div class="form-row field-message">
+                        <div class="email-message" style="display: flex;">
+                            <label class="required" for="id_message">{{ form.message.label }}</label>
+                            <div style="width: 69em;">{{ form.message }}</div>
+                        </div>
+                    </div>
+                    {{ form.media  }}
+                </fieldset>
+                <div class="submit-row">
+                    <input type="submit" value="Enviar" class="default" name="_save">
+                </div>
+                    <script id="django-admin-form-add-constants" src="/static/admin/js/change_form.js" async="">
+                    </script>
+                <script id="django-admin-prepopulated-fields-constants" src="/static/admin/js/prepopulate_init.js" data-prepopulated-fields="[]">
+                </script>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+$('#text').summernote();
