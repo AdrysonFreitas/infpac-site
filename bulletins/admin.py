@@ -14,13 +14,12 @@ class CategoryAdmin(admin.ModelAdmin):
     fields = ['name', 'description']
     list_display = ('name', )
     list_filter = ['name']
-    search_fields = ['name']
 
 admin.site.register(Category, CategoryAdmin)
 
 class BulletinAdmin(admin.ModelAdmin):
     fields = ['name', 'image','description','category','tags','bulletin_url','created_at']
-    list_display = ('name','category','created_at','views')
+    list_display = ('name','id','category','created_at','views')
     list_filter = ['tags','category']
     search_fields = ['name']
 
@@ -49,7 +48,7 @@ admin.site.register(Action, ActionAdmin)
 
 class SubscribersAdmin(admin.ModelAdmin):
     fields = ['name','email']
-    list_display = ['name', 'email','subscription_token']
+    list_display = ['name', 'id', 'email']
     search_fields = ['name']
 
 admin.site.register(Subscribers, SubscribersAdmin)

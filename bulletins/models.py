@@ -31,7 +31,6 @@ class Category(models.Model):
         verbose_name_plural = 'categorias'
 
     def __str__(self):
-        #return f'{self.name} {self.avg} {self.count_review}'
         return self.name
 
     def save(self, *args, **kwargs):
@@ -75,7 +74,6 @@ class Bulletin(models.Model):
         verbose_name_plural = 'boletins'
 
     def __str__(self):
-        #return f'{self.name} {self.rating} {self.count_review}'
         return self.name
 
     def get_absolute_url(self):
@@ -132,6 +130,9 @@ class Subscribers(models.Model):
         ordering = ['name']
         verbose_name = 'inscrito'
         verbose_name_plural = 'inscritos'
+
+    def __str__(self):
+        return f'Inscrito de ID: {self.id}'
 
     def save(self, *args, **kwargs):
         self.subscription_token = f"{self.email}#{time.time()}"

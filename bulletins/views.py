@@ -13,13 +13,15 @@ from django.db.models.functions import Round, Cast
 from django.db import IntegrityError
 from django.core.paginator import Paginator
 from django.views.generic.list import MultipleObjectMixin
-from django.core.mail import send_mail,EmailMessage
+from django.core.mail import send_mail,EmailMessage,send_mass_mail,get_connection, EmailMultiAlternatives
 from django.contrib import messages
 from .forms import NewsletterCreatorForm
 from django.conf import settings
 from .static.bulletins.assets import blocked_emails
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
+from django.template import Template, Context
 from .utils.encryption_util import *
+from django.utils.html import strip_tags, format_html
 import random
 import re
 import logging
@@ -28,6 +30,24 @@ import sys
 import pdb
 
 import json
+
+def send_bulk_email(request, subscribers, subject, template, from_email):
+    emails = []
+    for recipient in subscribers:
+        token = encrypt(recipient.subscription_token)
+        unsubscribe_url = request.build_absolute_uri(
+                reverse('unsubscribe')) + "?token=" + token
+
+        context = Context({ 'name': recipient.name,
+                    'unsubscribe_url': unsubscribe_url })
+
+        html_content = template.render(context)
+        text_content = strip_tags(html_content)
+        email = EmailMultiAlternatives(subject, text_content, from_email, [recipient.email])
+        email.attach_alternative(html_content, "text/html")
+        emails.append(email)
+    connection = get_connection()
+    return connection.send_messages(emails)
 
 def add_click(request):
     bulletin_id = request.GET.get("bulletinId", None)
@@ -73,6 +93,7 @@ def newsletter(request):
             subscribers.save()
 
             token = encrypt(subscribers.subscription_token)
+            #pdb.set_trace()
 
             unsubscribe_url = request.build_absolute_uri(
                 reverse('unsubscribe')) + "?token=" + token
@@ -224,13 +245,13 @@ class newsletterCreator(FormView):
 
     def form_valid(self, form):
         subject = form.cleaned_data.get('subject')
-        receivers = form.cleaned_data.get('receivers').split(',')
-        email_message = form.cleaned_data.get('message')
+        template = Template(form.cleaned_data.get('message'))
+        subscribers = Subscribers.objects.all()
+        #pdb.set_trace()
 
-        mail = EmailMessage(subject, email_message, f"Infpac <{settings.EMAIL_HOST_USER}>", bcc=receivers)
-        mail.content_subtype = 'html'
+        mail = send_bulk_email(self.request, subscribers, subject, template, from_email=f"Infpac <{settings.EMAIL_HOST_USER}>")
 
-        if mail.send():
+        if mail:
             messages.success(self.request, "E-mail enviado com sucesso!")
         else:
             messages.error(self.request, "Houve um erro ao enviar o e-mail")
@@ -240,11 +261,10 @@ class newsletterCreator(FormView):
     def get_initial(self):
         initial = super().get_initial()
         initial_msg = get_template('bulletins/emails/default_newsletter.html')
-
-        data = { }
-
+        
+        initial['subject'] = 'Mensagem do Infpac'
         initial['receivers'] = ','.join([active.email for active in Subscribers.objects.all()])
-        initial['message'] = initial_msg.render(data)
+        initial['message'] = initial_msg.render
 
         return initial
 
