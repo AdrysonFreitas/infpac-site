@@ -1,19 +1,13 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, JsonResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
-from django.utils.decorators import method_decorator
 from .models import Tag,Category,Bulletin,TeamMember,Partner,Action,Subscribers
 from django.template import loader
 from django.views import generic
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from django.db.models import Avg, IntegerField
-from django.db.models.functions import Round, Cast
-from django.db import IntegrityError
 from django.core.paginator import Paginator
-from django.views.generic.list import MultipleObjectMixin
-from django.core.mail import send_mail,EmailMessage,send_mass_mail,get_connection, EmailMultiAlternatives
+from django.core.mail import send_mail,get_connection, EmailMultiAlternatives
 from django.contrib import messages
 from .forms import NewsletterCreatorForm
 from django.conf import settings
@@ -33,13 +27,14 @@ import json
 
 def send_bulk_email(request, subscribers, subject, template, from_email):
     emails = []
+
     for recipient in subscribers:
         token = encrypt(recipient.subscription_token)
         unsubscribe_url = request.build_absolute_uri(
                 reverse('unsubscribe')) + "?token=" + token
 
-        context = Context({ 'name': recipient.name,
-                    'unsubscribe_url': unsubscribe_url })
+        context = Context({ 'nome': recipient.name,
+                    'link_cancelar': unsubscribe_url,})
 
         html_content = template.render(context)
         text_content = strip_tags(html_content)
@@ -98,15 +93,21 @@ def newsletter(request):
             unsubscribe_url = request.build_absolute_uri(
                 reverse('unsubscribe')) + "?token=" + token
 
-            welcome_msg = get_template('bulletins/emails/welcome_message.txt')
+            logo_url = request.build_absolute_uri(reverse('index')) +"static/dist/img/logo.png"
+            center_img_url = request.build_absolute_uri(reverse('index')) +"static/dist/img/2.png"
+            home_url = request.build_absolute_uri(reverse('index'))
+
             html_welcome_msg = get_template('bulletins/emails/html_welcome_message.html')
 
-            data = { 'name': name,
-                     'unsubscribe_url': unsubscribe_url }
+            data = { 'nome': name,
+                     'link_cancelar': unsubscribe_url,
+                     'img_logo': logo_url,
+                     'img_center': center_img_url,
+                     'link_site': home_url }
 
             subject = 'Confirmada a inscrição nas atualizações informativas do Infpac!'
-            message = welcome_msg.render(data)
             html_message = html_welcome_msg.render(data)
+            message = strip_tags(html_message)
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [email, ]
             send_mail(subject, message, f"Infpac <{email_from}>", recipient_list, html_message=html_message)
@@ -174,7 +175,6 @@ class CategoryIndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(CategoryIndexView, self).get_context_data(**kwargs)
         items = list(Category.objects.all())
-        context['random_category'] = random.choice(items)
         return context
 
 class CategoryDetailView(generic.DetailView):
@@ -247,8 +247,6 @@ class newsletterCreator(FormView):
         subject = form.cleaned_data.get('subject')
         template = Template(form.cleaned_data.get('message'))
         subscribers = Subscribers.objects.all()
-        #pdb.set_trace()
-
         mail = send_bulk_email(self.request, subscribers, subject, template, from_email=f"Infpac <{settings.EMAIL_HOST_USER}>")
 
         if mail:
@@ -261,10 +259,33 @@ class newsletterCreator(FormView):
     def get_initial(self):
         initial = super().get_initial()
         initial_msg = get_template('bulletins/emails/default_newsletter.html')
+        logo_url = self.request.build_absolute_uri(reverse('index')) +"static/dist/img/logo.png"
+        home_url = self.request.build_absolute_uri(reverse('index'))
+
+        try:
+            latest = Bulletin.objects.latest('id')
+            latest_url = self.request.build_absolute_uri(reverse('index')) + latest.get_absolute_url()
+            latest_img = latest.image
+            latest_name = latest.name
+            latest_description = latest.description
+        except Bulletin.DoesNotExist:
+            latest = Bulletin.objects.none()
+            latest_url = self.request.build_absolute_uri(reverse('index'))
+            latest_img = ""
+            latest_name = ""
+            latest_description = ""
+
+        data = {
+            'link_logo': logo_url,
+            'link_site': home_url,
+            'latest_url': latest_url,
+            'latest_img': latest_img,
+            'latest_name': latest_name,
+            'latest_description': latest_description
+        }
         
-        initial['subject'] = 'Mensagem do Infpac'
-        initial['receivers'] = ','.join([active.email for active in Subscribers.objects.all()])
-        initial['message'] = initial_msg.render
+        initial['subject'] = f'Lançado o {latest_name}'
+        initial['message'] = initial_msg.render(data)
 
         return initial
 
@@ -274,13 +295,12 @@ def unsubscribe(request):
 
     token = request.GET.get("token", None)
     token = decrypt(token)
-    #pdb.set_trace()
 
     if token:
         token = token.split("#")
         email = token[0]
         print(email)
-        initiate_time = token[1]  # time when email was sent , in epoch format. can be used for later calculations
+        initiate_time = token[1] 
         try:
             Subscribers.objects.get(email=email).delete()
             messages.success(request, "Inscrição cancelada. Obrigado!")

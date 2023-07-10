@@ -21,12 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ["192.168.1.11", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'compressor',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,16 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'fontawesomefree',
     'django_social_share',
     'django_summernote', 
-    'crispy_forms',
-    'crispy_bootstrap4',
     'bulletins.apps.BulletinsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -143,9 +142,6 @@ DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 LOGIN_URL = '/admin/'
 LOGIN_REDIRECT_URL = '/admin/'
 
@@ -199,6 +195,8 @@ SUMMERNOTE_CONFIG = {
             'theme': 'monokai',
         },
     },
+
+    'attachment_filesize_limit': 5000 * 5000,
 }
 
 MESSAGE_TAGS = {

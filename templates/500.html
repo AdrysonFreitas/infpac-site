@@ -1,0 +1,34 @@
+{% extends 'bulletins/base.html' %}
+{% block title %} Página não encontrada - Infpac {% endblock %}
+{% load static %}
+
+{% block head %}
+<meta property="og:title" content="Página não encontrada">
+<meta property="og:image" content="{% static 'dist/img/2.png' %}">
+<meta property="og:description" content="Esta página não existe">
+<meta name="twitter:card" content="summary_large_image" />  
+<meta name="twitter:title" content="Página não encontrada" />
+<meta name="twitter:image" content="{% static 'dist/img/2.png' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="category-index top">
+    <div class="top_category top_img img-fluid"></div>
+
+    <div class="container cont-header p-0">
+        {% include 'bulletins/header.html' %}</div>
+
+    <div class="headline index">
+        <div class="bulletin-info headline-text">
+            <span class="right-side-contents-number">Erro</span>
+            <h1 class="headline-title mb-0">Erro no servidor</h1>
+        </div>
+    </div>
+</div>
+
+<div class="list-block error-page">
+    <span> </span>
+</div>
+
+{% endblock %}
