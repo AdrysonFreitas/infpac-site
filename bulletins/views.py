@@ -265,7 +265,7 @@ class newsletterCreator(FormView):
         try:
             latest = Bulletin.objects.latest('id')
             latest_url = self.request.build_absolute_uri(reverse('index')) + latest.get_absolute_url()
-            latest_img = latest.image
+            latest_img = self.request.build_absolute_uri(reverse('index')) + latest.image.url
             latest_name = latest.name
             latest_description = latest.description
         except Bulletin.DoesNotExist:
